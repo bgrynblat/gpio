@@ -22,30 +22,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/gpio', (req, res) => {
-    const {pin} = req.query
-    const GPIO = parseInt(pin as string)
-    if(isNaN(GPIO) || !GPIO || GPIO > MAX_GPIO || GPIO < 1) {
-        res.status(400).send('Invalid pin')
-    }
-    const gpio = new Gpio(GPIO, 'out')
-    res.send({
-        pin: GPIO,
-        status: gpio.readSync() === 1 ? 'on' : 'off'
-    })
-});
-
-app.post('/gpio', (req, res) => {
     const {pin, action} = req.body
     const GPIO = parseInt(pin)
     if(isNaN(GPIO) || !GPIO || GPIO > MAX_GPIO || GPIO < 1) {
         res.status(400).send('Invalid pin')
     }
+    const gpio = new Gpio(GPIO, 'out')
+
     if(!action || (action !== 'on' && action !== 'off' && action !== 'toggle')) {
-        res.status(400).send('Invalid action')
+        return res.send({
+            pin: GPIO,
+            status: gpio.readSync()
+        })
     }
 
     try {
-        const gpio = new Gpio(GPIO, 'out')
         let newValue:BinaryValue = 0
         if(action === 'on') {
             newValue = 1
