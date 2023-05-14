@@ -22,8 +22,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/gpio', (req, res) => {
-    const {pin, action} = req.body
-    const GPIO = parseInt(pin)
+    const {pin, action} = req.query
+    const GPIO = parseInt(pin as string)
     if(isNaN(GPIO) || !GPIO || GPIO > MAX_GPIO || GPIO < 1) {
         res.status(400).send('Invalid pin')
     }
