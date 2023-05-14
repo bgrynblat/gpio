@@ -21,19 +21,28 @@ app.get('/', (req, res) => {
     res.send('OK');
 });
 
+const map = new Map<number, Gpio>()
+
 app.get('/gpio', (req, res) => {
     const {pin, action} = req.query
     const GPIO = parseInt(pin as string)
     if(isNaN(GPIO) || !GPIO || GPIO > MAX_GPIO || GPIO < 1) {
         res.status(400).send('Invalid pin')
     }
-    const gpio = new Gpio(GPIO, 'out')
 
-    if(!action || (action !== 'on' && action !== 'off' && action !== 'toggle')) {
+    if(!map.has(GPIO)) {
+        map.set(GPIO, new Gpio(GPIO, 'out'))
+    }
+
+    const gpio = map.get(GPIO) as Gpio
+
+    if(!action) {
         return res.send({
             pin: GPIO,
             status: gpio.readSync()
         })
+    } else if(action !== 'on' && action !== 'off' && action !== 'toggle') {
+        return res.status(400).send('Invalid action')
     }
 
     try {
