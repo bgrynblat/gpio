@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+export const html = `<!DOCTYPE html>
 <html>
 <head>
     <title>Configuration Page</title>
@@ -115,7 +115,7 @@
 
             const timeInput = document.createElement("div");
             timeInput.className = "time-slot";
-            timeInput.innerHTML = `
+            timeInput.innerHTML = \`
                 <label>
                     Start Time:
                     <input type="text" name="startTime" required class="form-control">
@@ -127,7 +127,7 @@
                 <button type="button" class="delete-time-button btn btn-danger btn-sm">
                     Delete
                 </button>
-            `;
+            \`;
 
             const deleteButton = timeInput.querySelector(".delete-time-button");
             deleteButton.addEventListener("click", function () {
@@ -193,19 +193,19 @@
 
                 const timeInput = document.createElement("div");
                 timeInput.className = "time-slot";
-                timeInput.innerHTML = `
+                timeInput.innerHTML = \`
                     <label>
                         Start Time:
-                        <input type="text" name="startTime" required class="form-control" value="${time.start}">
+                        <input type="text" name="startTime" required class="form-control" value="\${time.start}">
                     </label>
                     <label>
                         Duration (seconds):
-                        <input type="number" name="durationSeconds" required class="form-control" value="${time.durationSeconds}">
+                        <input type="number" name="durationSeconds" required class="form-control" value="\${time.durationSeconds}">
                     </label>
                     <button type="button" class="delete-time-button btn btn-danger btn-sm">
                         Delete
                     </button>
-                `;
+                \`;
 
                 const deleteButton = timeInput.querySelector(".delete-time-button");
                 deleteButton.addEventListener("click", function () {
@@ -242,3 +242,4 @@
     </script>
 </body>
 </html>
+`

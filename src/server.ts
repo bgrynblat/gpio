@@ -2,7 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import { Config, isValid, load, save } from './config';
 import { start, stop } from './scheduler';
-import {html} from "./index_minified"
+import {html} from "./html"
 
 const PORT = parseInt(process.env.PORT as string) || 3000;
 const MAX_GPIO = parseInt(process.env.MAX_GPIO as string) || 26;
