@@ -1,6 +1,8 @@
 import express from 'express'
 import {BinaryValue, Gpio} from 'onoff'
 import bodyParser from 'body-parser'
+import { Config, isValid, load, save } from './config';
+import { start, stop } from './scheduler';
 
 const PORT = parseInt(process.env.PORT as string) || 3000;
 const MAX_GPIO = parseInt(process.env.MAX_GPIO as string) || 26;
@@ -18,8 +20,30 @@ app.use((req, res, next) => {
 })
 
 app.get('/', (req, res) => {
-    res.send('OK');
+    res.sendFile(__dirname + '/index.html')
 });
+
+app.get('/config', (req, res) => {
+    res.send(load())
+});
+
+app.post('/config', async (req, res) => {
+    try {
+        console.log(req.body)
+        const config = req.body as Config
+        if(isValid(config)) {
+            await stop()
+            save(config)
+            start(config)
+            res.send(config)
+        } else {
+            res.status(400).send('Invalid config')
+        }
+    } catch(e) {
+        res.status(500).send((e as any).message)
+    }
+});
+
 
 const map = new Map<number, Gpio>()
 
@@ -64,6 +88,8 @@ app.get('/gpio', (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 })
+
+export default {app, server}
