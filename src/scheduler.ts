@@ -1,4 +1,5 @@
 import { Config } from "./config"
+import { turnOff, turnOn } from "./gpio"
 
 const whatson:Map<string, boolean> = new Map()
 
@@ -16,8 +17,10 @@ export const start = (config:Config) => {
         if(currentTime === time.start && !whatson.get(time.start)) {
             console.log(`${new Date().toISOString()}: Turning on ${time.start} for ${time.durationSeconds} seconds`)
             whatson.set(time.start, true)
+            turnOn(21)
             setTimeout(() => {
                 console.log(`${new Date().toISOString()}: Turning off ${time.start}`)
+                turnOff(21)
                 setTimeout(() => {
                     console.log(`${new Date().toISOString()}: Clearing up ${time.start}`)
                     whatson.delete(time.start)
