@@ -1,8 +1,8 @@
 import express from 'express'
-import {BinaryValue, Gpio} from 'onoff'
 import bodyParser from 'body-parser'
 import { Config, isValid, load, save } from './config';
 import { start, stop } from './scheduler';
+import {html} from "./index_minified"
 
 const PORT = parseInt(process.env.PORT as string) || 3000;
 const MAX_GPIO = parseInt(process.env.MAX_GPIO as string) || 26;
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 })
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html')
+    res.send(html)
 });
 
 app.get('/config', (req, res) => {

@@ -3,10 +3,11 @@ import { turnOff, turnOn } from "./gpio"
 
 const whatson:Map<string, boolean> = new Map()
 
-let timeout:NodeJS.Timeout | undefined | null
+let interval:NodeJS.Timeout | undefined | null
 
-export const start = (config:Config) => {
-    if(timeout === undefined)  console.log(`${new Date().toISOString()}: Starting scheduler`)
+const GPIO_RELAY = 21
+
+export const execute = (config:Config) => {
     const now = new Date()
     const day = now.getDay() // 1 = Monday, 2 = Tuesday, etc.
     if(!config.days[day-1]) return
@@ -17,10 +18,10 @@ export const start = (config:Config) => {
         if(currentTime === time.start && !whatson.get(time.start)) {
             console.log(`${new Date().toISOString()}: Turning on ${time.start} for ${time.durationSeconds} seconds`)
             whatson.set(time.start, true)
-            turnOn(21)
+            turnOn(GPIO_RELAY)
             setTimeout(() => {
                 console.log(`${new Date().toISOString()}: Turning off ${time.start}`)
-                turnOff(21)
+                turnOff(GPIO_RELAY)
                 setTimeout(() => {
                     console.log(`${new Date().toISOString()}: Clearing up ${time.start}`)
                     whatson.delete(time.start)
@@ -28,21 +29,17 @@ export const start = (config:Config) => {
             }, time.durationSeconds*1000)
         }
     })
+}
 
-    if(timeout !== null) {
-        timeout = setTimeout(start, 1000, config)
-    } else {
-        console.log(`${new Date().toISOString()}: Scheduler stopped`)
-        timeout = undefined
-    }
+export const start = (config:Config) => {
+    console.log(`${new Date().toISOString()}: Starting scheduler`)
+    interval = setInterval(execute, 1000, config)
 }
 
 
 export const stop = async () => {
-    if(timeout === undefined || timeout === null) return
+    if(interval === undefined || interval === null) return
     console.log(`${new Date().toISOString()}: Stopping scheduler`)
-    clearTimeout(timeout)
-    timeout = null
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    timeout = undefined
+    clearInterval(interval)
+    interval = undefined
 }
