@@ -1,3 +1,4 @@
+import { GPIO_RELAY } from "."
 import { Config } from "./config"
 import { turnOff, turnOn } from "./gpio"
 
@@ -5,12 +6,14 @@ const whatson:Map<string, boolean> = new Map()
 
 let interval:NodeJS.Timeout | undefined | null
 
-const GPIO_RELAY = 21
 
 export const execute = (config:Config) => {
     const now = new Date()
-    const day = now.getDay() // 1 = Monday, 2 = Tuesday, etc.
-    if(!config.days[day-1]) return
+    const day = now.getDay() // 0 = Sunday, 1 = Monday, 2 = Tuesday, etc.
+    if(!config.days[day]) {
+        // console.log(`${new Date().toISOString()}: Not a scheduled day ${day}`)
+        return
+    }
     const currentHour = now.getHours()<10 ? `0${now.getHours()}` : `${now.getHours()}`
     const currentMinute = now.getMinutes()<10 ? `0${now.getMinutes()}` : `${now.getMinutes()}`
     const currentTime = `${currentHour}${currentMinute}`

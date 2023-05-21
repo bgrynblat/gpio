@@ -50,3 +50,15 @@ export const turnOff = (gpio:number) => {
 		gpios[gpio-1].writeSync(0)
 }
 
+export const toggle = (gpio:number) => {
+	if(gpios[gpio-1] && !!gpios[gpio-1].writeSync) {
+		const v = gpios[gpio-1].readSync()
+		gpios[gpio-1].writeSync(v === 0 ? 1 : 0)
+	}
+}
+
+export const read = (gpio:number) => {
+	if(gpios[gpio-1] && !!gpios[gpio-1].readSync)
+		return gpios[gpio-1].readSync()
+	return 0
+}

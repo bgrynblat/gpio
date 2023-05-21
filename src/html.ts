@@ -1,4 +1,5 @@
-export const html = `<!DOCTYPE html>
+export const html = `
+<!DOCTYPE html>
 <html>
 <head>
     <title>Configuration Page</title>
@@ -62,35 +63,41 @@ export const html = `<!DOCTYPE html>
     <div class="config-container">
         <h1>Configuration Page</h1>
 
+        <div>
+            <button type="button" id="toggle-button" class="btn btn-danger" onclick="manual('toggle')" style="width: 100%">
+                TOGGLE
+            </button>
+        </div>
+
         <form id="configForm">
             <h2>Days:</h2>
             <div class="days-container">
                 <label>
-                    <input class="form-check-input" type="checkbox" name="day" value="0" id="mondayCheck">
+                    <input class="form-check-input" type="checkbox" name="day" value="1" id="mondayCheck">
                     Mon
                 </label>
                 <label>
-                    <input class="form-check-input" type="checkbox" name="day" value="1" id="tuesdayCheck">
+                    <input class="form-check-input" type="checkbox" name="day" value="2" id="tuesdayCheck">
                     Tue
                 </label>
                 <label>
-                    <input class="form-check-input" type="checkbox" name="day" value="2" id="wednesdayCheck">
+                    <input class="form-check-input" type="checkbox" name="day" value="3" id="wednesdayCheck">
                     Wed
                 </label>
                 <label>
-                    <input class="form-check-input" type="checkbox" name="day" value="3" id="thursdayCheck">
+                    <input class="form-check-input" type="checkbox" name="day" value="4" id="thursdayCheck">
                     Thu
                 </label>
                 <label>
-                    <input class="form-check-input" type="checkbox" name="day" value="4" id="fridayCheck">
+                    <input class="form-check-input" type="checkbox" name="day" value="5" id="fridayCheck">
                     Fri
                 </label>
                 <label>
-                    <input class="form-check-input" type="checkbox" name="day" value="5" id="saturdayCheck">
+                    <input class="form-check-input" type="checkbox" name="day" value="6" id="saturdayCheck">
                     Sat
                 </label>
                 <label>
-                    <input class="form-check-input" type="checkbox" name="day" value="6" id="sundayCheck">
+                    <input class="form-check-input" type="checkbox" name="day" value="0" id="sundayCheck">
                     Sun
                 </label>
             </div>
@@ -216,6 +223,14 @@ export const html = `<!DOCTYPE html>
             }
         }
 
+        const manual = (action) => {
+            fetch(\`/manual?\${action ? \`action=\${action}\` : ''}\`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                });
+        }
+
         const fetchConfig = () => {
             fetch('/config')
                 .then(response => response.json())
@@ -242,4 +257,5 @@ export const html = `<!DOCTYPE html>
     </script>
 </body>
 </html>
+
 `
