@@ -2,13 +2,14 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import { Config, isValid, load, save } from './config';
 import { start, stop } from './scheduler';
-import {html} from "./html"
 import { read, toggle, turnOff, turnOn } from './gpio';
 import { GPIO_RELAY } from '.';
+import path from 'path';
 
 const PORT = parseInt(process.env.PORT as string) || 3000;
 const MAX_GPIO = parseInt(process.env.MAX_GPIO as string) || 26;
 const AUTH_TOKEN = process.env.AUTH_TOKEN as string;
+const HTML_PATH = process.env.HTML_PATH as string || `${__dirname}/../public`;
 
 const app = express();
 app.use(bodyParser.json())
@@ -22,7 +23,7 @@ app.use((req, res, next) => {
 })
 
 app.get('/', (req, res) => {
-    res.send(html)
+    res.sendFile(path.resolve(`${HTML_PATH}/index.html`))
 });
 
 app.get('/config', (req, res) => {
